@@ -2,31 +2,31 @@
 
 #sudo apt install inotify-tools
 #sudo apt install libxml2-utils
-while inotifywait -r -e modify /home/user/DockerScripts/demande.xml
-do
-	action=$(xmllint --xpath '//action/text()' demande.xml)
-	if [ "$action" == "create" ]
+#while inotifywait -r -e modify /home/user/DockerScripts/demande.xml
+#do
+action=$(xmllint --xpath '//action/text()' demande.xml)
+if [ "$action" == "create" ]
+then
+	image=$(xmllint --xpath '//image/text()' demande.xml)
+	image="${image,,}" #to lower case
+
+	#on change le nom de l'image par celui de nos propres images docker avec ssh installé
+	if [ "$image" == "debian" ]
 	then
-		image=$(xmllint --xpath '//image/text()' demande.xml)
-		image="${image,,}" #to lower case
-
-		#on change le nom de l'image par celui de nos propres images docker avec ssh installé
-		if [ "$image" == "debian" ]
-		then
-			image="mydebian"
-		elif [ "$image" == "centos" ]
-		then
-			image="mycentos"
-		fi
-
-		nb=$(xmllint --xpath '//nb/text()' demande.xml)
-
-		echo $action
-		echo $image
-		echo $nb
-		./scriptCreateContainer $nb $image 
-	elif [ "$action" == "destroyall" ]
+		image="mydebian"
+	elif [ "$image" == "centos" ]
 	then
-		./scriptDestroyAllContainers
+		image="mycentos"
 	fi
-done
+
+	nb=$(xmllint --xpath '//nb/text()' demande.xml)
+
+	echo $action
+	echo $image
+	echo $nb
+	./scriptCreateContainer $nb $image 
+elif [ "$action" == "destroyall" ]
+then
+	./scriptDestroyAllContainers
+fi
+#done

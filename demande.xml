@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document><data><action>destroyall</action></data></document>
+<data>
+  <action>destroyall</action>
+  <image>0</image>
+  <nb>0</nb>
+</data>
