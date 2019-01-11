@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# $1=nombre, $2=image
+nb=$1
+image=$2
+x=1
+while [ $x -le $nb ]
+do
+	docker create -t -i $image 
+	x=$(( $x + 1 ))
+done
