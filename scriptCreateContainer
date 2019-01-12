@@ -9,5 +9,7 @@ do
 	docker create -t -i $image
 	x=$(( $x + 1 ))
 done
-#ça ne marche pas encore
-#python3 scriptCreateXML.py	
+echo 'Création de conteneurs terminé !'
+	#pour marcher changer chmod of user
+	python3 /home/user/DockerScripts/scriptCreateXML.py	
+echo 'scriptCreateContainer terminé'
