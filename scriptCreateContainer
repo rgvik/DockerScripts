@@ -6,6 +6,8 @@ image=$2
 x=1
 while [ $x -le $nb ]
 do
-	docker create -t -i $image 
+	docker create -t -i $image
 	x=$(( $x + 1 ))
 done
+#ça ne marche pas encore
+#python3 scriptCreateXML.py	
