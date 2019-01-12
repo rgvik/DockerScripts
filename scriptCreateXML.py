@@ -3,8 +3,8 @@
 
 
 from xml.dom import minidom
-from xml.dom.minidom import Document
 from subprocess import check_output
+import os
 
 xml = minidom.Document()
 
@@ -45,3 +45,5 @@ with open (save_path_file, "w") as f:
     f.write(xml_str)
 
 print("Creation du fichier XML de retour terminé !")
+
+os.system("/home/user/DockerScripts/scriptSendXML")
