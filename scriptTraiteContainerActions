@@ -1,0 +1,11 @@
+#!/bin/bash
+
+action=$(xmllint --xpath '//action/text()' /home/user/DockerScripts/demande_container_action.xml)
+if [ "$action" == "destroy" ]
+then
+        id=$(xmllint --xpath '//id/text()'  /home/user/DockerScripts/demande_container_action.xml)
+	echo $id
+	/home/user/DockerScripts/scriptDestroyContainer $id
+fi
+#done
+

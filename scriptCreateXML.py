@@ -44,6 +44,7 @@ save_path_file = "retour.xml"
 with open (save_path_file, "w") as f:
     f.write(xml_str)
 
-print("Creation du fichier XML de retour terminé !")
+print("Création du fichier retour.xml terminé !")
 
 os.system("/home/user/DockerScripts/scriptSendXML")
+print("scriptCreateXML.py terminé !")
