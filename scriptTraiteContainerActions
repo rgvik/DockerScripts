@@ -6,6 +6,16 @@ then
         id=$(xmllint --xpath '//id/text()'  /home/user/DockerScripts/demande_container_action.xml)
 	echo $id
 	/home/user/DockerScripts/scriptDestroyContainer $id
+elif [ "$action" == "start" ]
+then
+        id=$(xmllint --xpath '//id/text()'  /home/user/DockerScripts/demande_container_action.xml)
+	echo $id
+	/home/user/DockerScripts/scriptStartContainer $id
+elif [ "$action" == "stop" ]
+then
+        id=$(xmllint --xpath '//id/text()'  /home/user/DockerScripts/demande_container_action.xml)
+	echo $id
+	/home/user/DockerScripts/scriptStopContainer $id
 fi
 #done
 
