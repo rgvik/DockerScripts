@@ -2,3 +2,5 @@
 id=$1
 docker stop $id
 docker rm $id
+python3 /home/user/DockerScripts/scriptCreateXML.py
+echo 'scriptDestroyContainer terminé !'

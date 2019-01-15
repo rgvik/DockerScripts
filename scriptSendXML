@@ -4,5 +4,5 @@
 # et donner à ce fichier les permissions de 'user' pour que ça fonctionne
 scp /home/user/DockerScripts/retour.xml user@192.168.56.102:/var/www/pageDeGestion/html/retour.xml
 echo 'Envoi du Fichier retour.xml terminé !'
-rm /home/user/DockerScripts/retour.xml
+#rm /home/user/DockerScripts/retour.xml
 echo 'scriptSendXML terminé !'

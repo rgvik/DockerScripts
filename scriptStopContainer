@@ -1,3 +1,5 @@
 #!/bin/bash
 id=$1
 docker stop $id
+python3 /home/user/DockerScripts/scriptCreateXML.py
+echo 'scriptStopContainer terminé !'

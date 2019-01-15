@@ -39,7 +39,7 @@ xml.appendChild(rootElem)
 
 xml_str = xml.toprettyxml(indent="\t")
 
-save_path_file = "retour.xml"
+save_path_file = "/home/user/DockerScripts/retour.xml"
 
 with open (save_path_file, "w") as f:
     f.write(xml_str)
