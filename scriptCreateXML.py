@@ -64,12 +64,4 @@ xml.appendChild(rootElem)
 
 xml_str = xml.toprettyxml(indent="\t")
 
-save_path_file = "/home/user/DockerScripts/retour.xml"
-
-with open (save_path_file, "w") as f:
-    f.write(xml_str)
-
-print("Création du fichier retour.xml terminé !")
-
-os.system("/home/user/DockerScripts/scriptSendXML")
-print("scriptCreateXML.py terminé !")
+print(xml_str)
