@@ -1,0 +1,12 @@
+#!/bin/bash
+# ce script récupère les images docker disponibles
+# pour information :
+# on récupère les infos
+# on remplace les répétitions d'espace pas ','
+# on sélection uniquement la première colonne (nom des images)
+# on enlève le titre de la colonne
+# on remplace les retours à la ligne par ','
+# on enlève la ',' finale pour être conforme à l'utilisation
+# exemple de sortie : ubuntu,debian,centos
+
+docker images | sed 's/\ \+/,/g' | cut -d , -f 1 | tail -n +2 | tr '\n' ',' | sed 's/.$//g'

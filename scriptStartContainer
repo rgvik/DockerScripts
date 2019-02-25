@@ -1,5 +1,4 @@
 #!/bin/bash
 id=$1
 docker start $id
-python3 /home/user/DockerScripts/scriptCreateXML.py
-echo 'scriptStartContainer terminé !'
+echo "Démarrage du conteneur ${id}"

@@ -10,6 +10,3 @@ do
 	x=$(( $x + 1 ))
 done
 echo 'Création de conteneurs terminé !'
-	#pour marcher changer chmod of user
-	python3 /home/user/DockerScripts/scriptCreateXML.py	
-echo 'scriptCreateContainer terminé'
