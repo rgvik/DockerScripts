@@ -1,4 +1,4 @@
 #!/bin/bash
-id=$1
-docker start $id
-echo "Démarrage du conteneur ${id}"
+# $@ représente tous les paramètres
+docker start $@
+echo "Démarrage du/des conteneur(s) $@"
