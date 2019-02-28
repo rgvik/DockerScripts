@@ -1,4 +1,3 @@
 #!/bin/bash
-id=$1
-docker stop $id
-echo "Arrêt du conteneur ${id}"
+docker stop $@
+echo "Arrêt du/des conteneur(s) $@"
