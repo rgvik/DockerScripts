@@ -1,5 +1,4 @@
 #!/bin/bash
-id=$1
-docker stop $id
-docker rm $id
-echo "Destruction du conteneur ${id}"
+docker stop $@
+docker rm $@
+echo "Destruction du/des conteneur(s) $@"
