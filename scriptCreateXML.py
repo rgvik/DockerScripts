@@ -1,67 +1,86 @@
-#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-
 from xml.dom import minidom
-from subprocess import check_output
-import os
 import subprocess
 
-xml = minidom.Document()
+def getContainersID():
+    containersID = subprocess.check_output(('docker', 'ps' , '-aq'))
+    containersID = containersID.strip().decode("UTF-8")
+    containersID = containersID.split("\n")
+    return containersID
 
-#on récupère le nombre de conteneurs
-command = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
-nbConteneurs = subprocess.check_output(('wc','-l'), stdin=command.stdout)
-nbConteneurs = int(nbConteneurs.strip().decode("UTF-8"))
+def getContainersNames():
+    containersNames = subprocess.check_output(('docker', 'ps' , '-aq', '--format' , '{{.Names}}'))
+    containersNames = containersNames.strip().decode("UTF-8")
+    containersNames = containersNames.split("\n")
+    return containersNames
 
-rootElem = xml.createElement('containers')
-i = 1
-while i <= nbConteneurs:
-    dataElem = xml.createElement('data')
+def getContainersImages():
+    containersImages = subprocess.check_output(('docker', 'ps' , '-aq', '--format' , '{{.Image}}'))
+    containersImages = containersImages.strip().decode("UTF-8")
+    containersImages = containersImages.split("\n")
+    return containersImages
 
-    command = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
-    head = subprocess.Popen(('head','-n',str(i)), stdin=command.stdout, stdout=subprocess.PIPE)
-    tail = subprocess.check_output(('tail','-n','1'), stdin=head.stdout)
-    containerID = tail.strip().decode("UTF-8")
+def getContainersStatus():
+    containersStatus = subprocess.check_output(('docker', 'ps' , '-aq', '--format' , '{{.Status}}'))
+    containersStatus = containersStatus.strip().decode("UTF-8")
+    containersStatus = containersStatus.split("\n")
+    return containersStatus
 
-    idElem = xml.createElement('id')
-    idElem.appendChild(xml.createTextNode(containerID))
+def getContainersIP():
+    containersIP = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
+    containersIP = subprocess.check_output(('xargs', 'docker', 'inspect', '--format', '"{{ .NetworkSettings.IPAddress }}"'), stdin=containersIP.stdout)
+    containersIP = containersIP.strip().decode("UTF-8")
+    containersIP = containersIP.replace('""','No IP')
+    containersIP = containersIP.replace('"','')
+    containersIP = containersIP.split("\n")
+    return containersIP
 
-    command = subprocess.Popen(('docker', 'ps' , '-aq', '--format' , '{{.Names}}'), stdout=subprocess.PIPE)
-    head = subprocess.Popen(('head','-n',str(i)), stdin=command.stdout, stdout=subprocess.PIPE)
-    tail = subprocess.check_output(('tail','-n','1'), stdin=head.stdout)
-    containerName = tail.strip().decode("UTF-8")
+def main():
 
-    nameElem = xml.createElement('name')
-    nameElem.appendChild(xml.createTextNode(containerName))
+    xml = minidom.Document()
 
-    command = subprocess.Popen(('docker', 'ps' , '-aq', '--format' , '{{.Image}}'), stdout=subprocess.PIPE)
-    head = subprocess.Popen(('head','-n',str(i)), stdin=command.stdout, stdout=subprocess.PIPE)
-    tail = subprocess.check_output(('tail','-n','1'), stdin=head.stdout)
-    containerImg = tail.strip().decode("UTF-8")
+    containersID = getContainersID()
+    containersNames = getContainersNames()
+    containersImages = getContainersImages()
+    containersStatus = getContainersStatus()
+    containersIP = getContainersIP()
 
-    imgElem = xml.createElement('img')
-    imgElem.appendChild(xml.createTextNode(containerImg))
+    nbContainers = len(containersID)
+    rootElem = xml.createElement('containers')
+    i = 0
 
-    command = subprocess.Popen(('docker', 'ps' , '-aq', '--format' , '{{.Status}}'), stdout=subprocess.PIPE)
-    head = subprocess.Popen(('head','-n',str(i)), stdin=command.stdout, stdout=subprocess.PIPE)
-    tail = subprocess.check_output(('tail','-n','1'), stdin=head.stdout)
-    containerStatus = tail.strip().decode("UTF-8")
+    while i < nbContainers:
 
-    statusElem = xml.createElement('status')
-    statusElem.appendChild(xml.createTextNode(containerStatus))
+        dataElem = xml.createElement('data')
 
-    dataElem.appendChild(idElem)
-    dataElem.appendChild(nameElem)
-    dataElem.appendChild(imgElem)
-    dataElem.appendChild(statusElem)
+        idElem = xml.createElement('id')
+        nameElem = xml.createElement('name')
+        imgElem = xml.createElement('img')
+        statusElem = xml.createElement('status')
+        ipElem = xml.createElement('ip')
 
-    rootElem.appendChild(dataElem)
+        idElem.appendChild(xml.createTextNode(containersID[i]))
+        nameElem.appendChild(xml.createTextNode(containersNames[i]))
+        imgElem.appendChild(xml.createTextNode(containersImages[i]))
+        statusElem.appendChild(xml.createTextNode(containersStatus[i]))
+        ipElem.appendChild(xml.createTextNode(containersIP[i]))
 
-    i = i + 1
+        dataElem.appendChild(idElem)
+        dataElem.appendChild(nameElem)
+        dataElem.appendChild(imgElem)
+        dataElem.appendChild(statusElem)
+        dataElem.appendChild(ipElem)
 
-xml.appendChild(rootElem)
+        rootElem.appendChild(dataElem)
 
-xml_str = xml.toprettyxml(indent="\t")
+        i = i + 1
 
-print(xml_str)
+    xml.appendChild(rootElem)
+
+    xml_str = xml.toprettyxml(indent="\t")
+
+    print(xml_str)
+
+if __name__ == '__main__':
+    main()
