@@ -3,6 +3,12 @@
 from xml.dom import minidom
 import subprocess
 
+def getNbContainers():
+    nbContainers = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
+    nbContainers = subprocess.check_output(('wc','-l'), stdin=nbContainers.stdout)
+    nbContainers = int(nbContainers.strip().decode("UTF-8"))
+    return nbContainers
+
 def getContainersID():
     containersID = subprocess.check_output(('docker', 'ps' , '-aq'))
     containersID = containersID.strip().decode("UTF-8")
@@ -27,26 +33,29 @@ def getContainersStatus():
     containersStatus = containersStatus.split("\n")
     return containersStatus
 
-def getContainersIP():
-    containersIP = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
-    containersIP = subprocess.check_output(('xargs', 'docker', 'inspect', '--format', '"{{ .NetworkSettings.IPAddress }}"'), stdin=containersIP.stdout)
-    containersIP = containersIP.strip().decode("UTF-8")
-    containersIP = containersIP.replace('""','No IP')
-    containersIP = containersIP.replace('"','')
-    containersIP = containersIP.split("\n")
+def getContainersIP(nbContainers):
+    containersIP  = None
+    if nbContainers > 0:
+        containersIP = subprocess.Popen(('docker', 'ps' , '-aq'), stdout=subprocess.PIPE)
+        containersIP = subprocess.check_output(('xargs', 'docker', 'inspect', '--format', '"{{ .NetworkSettings.IPAddress }}"'), stdin=containersIP.stdout)
+        containersIP = containersIP.strip().decode("UTF-8")
+        containersIP = containersIP.replace('""','No IP')
+        containersIP = containersIP.replace('"','')
+        containersIP = containersIP.split("\n")
     return containersIP
 
 def main():
 
     xml = minidom.Document()
 
+    nbContainers = getNbContainers()
+
     containersID = getContainersID()
     containersNames = getContainersNames()
     containersImages = getContainersImages()
     containersStatus = getContainersStatus()
-    containersIP = getContainersIP()
+    containersIP = getContainersIP(nbContainers)
 
-    nbContainers = len(containersID)
     rootElem = xml.createElement('containers')
     i = 0
 
