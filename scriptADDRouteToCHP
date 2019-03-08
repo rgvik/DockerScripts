@@ -1,0 +1,8 @@
+#!/bin/bash
+
+containerID=$1
+containerIP=$2
+
+POST 192.168.56.101:8888/api/routes/$containerID << EOF
+{ "target": "http://$2:4200" }
+EOF
