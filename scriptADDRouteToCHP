@@ -1,8 +1,17 @@
 #!/bin/bash
+nbContainers=$1
+containers=$@
 
-containerID=$1
-containerIP=$2
+        IFS=' ' read -r -a containers <<< "$containers"
+	table_length=${#containers[@]}
+	nb_iterations=$(( table_length - nbContainers ))
+	i=1
+        while [ $i -lt $nb_iterations ]
+        do
+		container_ip_cell=$(( i + nbContainers ))
+		POST 192.168.56.101:8888/api/routes/${containers[i]} <<- EOF
+		{ "target": "http://${containers[container_ip_cell]}:4200"}
+		EOF
+		(( i++ ))
+        done
 
-POST 192.168.56.101:8888/api/routes/$containerID << EOF
-{ "target": "http://$2:4200" }
-EOF
