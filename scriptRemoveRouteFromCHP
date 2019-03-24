@@ -1,20 +1,24 @@
 #!/bin/bash
-
-containerIDs=$@
-echo "arg = $containerIDs"
-length=${#containerIDs}
+nbContainers=$1
+containers=$@
+echo "arg = $containers"
+length=${#containers}
 echo "len = $length"
-# 12 en bas représente le nombre de caractères dans un ID conteneur docker
-if [ $length -eq 12 ]
+# 77 en bas représente le nombre de caractères dans un ID conteneur docker + le token associé
+if [ $length -eq 77 ]
 then 
-	curl -X "DELETE" 192.168.56.101:8888/api/routes/$containerIDs
+	IFS=' ' read -r -a array <<< "$containers"
+	curl -X "DELETE" 192.168.56.101:8888/api/routes/${array[0]}/${array[1]}
 
-elif [ $length -gt 12 ]
+elif [ $length -gt 77 ]
 then
-	IFS=' ' read -r -a array <<< "$containerIDs"
-	for id in "${array[@]}"
+	IFS=' ' read -r -a array <<< "$containers"
+	len=${#array[@]}
+	i=1
+	while [ $i -lt $len ]
 	do
-		echo "$id"
-		curl -X "DELETE" 192.168.56.101:8888/api/routes/$id
+		token_cell=$(( i + nbContainers ))
+		curl -X "DELETE" 192.168.56.101:8888/api/routes/${array[i]}/${array[token_cell]}
+		(( i++ ))
 	done
 fi
